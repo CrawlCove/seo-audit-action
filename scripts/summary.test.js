@@ -45,7 +45,7 @@ test('a clean crawl renders as passed with every count zero and no details block
   assert.match(md, /Crawled \*\*1\*\* page from `https:\/\/acme.test\/`\./)
   assert.match(md, /\| Broken links \| 0 \| yes \|/)
   assert.doesNotMatch(md, /<details>/)
-  assert.match(md, /utm_source=github&utm_medium=crawlcove-action/)
+  assert.match(md, /utm_source=github&utm_medium=seo-audit-action/)
 })
 
 test('a failed crawl lists the broken links, the broken page, and the gated total', () => {

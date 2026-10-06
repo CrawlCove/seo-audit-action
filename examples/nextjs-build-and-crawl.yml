@@ -24,7 +24,7 @@ jobs:
         run: |
           (npx next start -p 3000 > /dev/null 2>&1 &)
           for i in $(seq 1 30); do curl -fs http://127.0.0.1:3000/ > /dev/null && break; sleep 1; done
-      - uses: CrawlCove/crawlcove-action@v1
+      - uses: CrawlCove/seo-audit-action@v1
         with:
           url: http://127.0.0.1:3000/
           max-pages: 300

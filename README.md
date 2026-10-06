@@ -5,7 +5,7 @@ A GitHub Action that runs an SEO crawl of your staging or preview URL on every p
 ## Usage
 
 ```yaml
-- uses: CrawlCove/crawlcove-action@v1
+- uses: CrawlCove/seo-audit-action@v1
   with:
     url: https://preview-123.example.com/
 ```
@@ -51,34 +51,34 @@ The PR comment needs `permissions: pull-requests: write` on the job; everything 
 | `missing-titles` | Pages with no `<title>`. |
 | `noindex` | Pages with a robots `noindex` meta tag. |
 | `redirect-chains` | URLs that went through 2 or more redirects (a single redirect is normal and not flagged). |
-| `report-path` | Path to the full JSON report — one object per page, field names shared with [crawlcove-export-spec](https://github.com/CrawlCove/crawlcove-export-spec). Upload it with `actions/upload-artifact` to keep it. |
+| `report-path` | Path to the full JSON report — one object per page, field names shared with [crawlcove-export-spec](https://github.com/CrawlCove/seo-crawl-export-spec). Upload it with `actions/upload-artifact` to keep it. |
 
 Read outputs from a later step with `${{ steps.<id>.outputs.broken-links }}`.
 
 ## How it decides
 
-The action installs [crawlcove-cli](https://github.com/CrawlCove/crawlcove-cli) and runs `crawlcove crawl <url>`. robots.txt is respected by default (a `User-agent: crawlcove-cli` group is honoured over `*`), so a preview host that blocks all crawlers yields exit code 2 and a "could not run" summary rather than a false pass — use `ignore-robots: 'true'` there. Previews are often deliberately `noindex`; drop `noindex` from `fail-on` in that case rather than turning the check off everywhere.
+The action installs [crawlcove-cli](https://github.com/CrawlCove/seo-crawler-cli) and runs `crawlcove crawl <url>`. robots.txt is respected by default (a `User-agent: crawlcove-cli` group is honoured over `*`), so a preview host that blocks all crawlers yields exit code 2 and a "could not run" summary rather than a false pass — use `ignore-robots: 'true'` there. Previews are often deliberately `noindex`; drop `noindex` from `fail-on` in that case rather than turning the check off everywhere.
 
 ## Works with CrawlCove
 
-This action is the CI half of [Crawl Cove](https://crawlcove.com/?utm_source=github&utm_medium=crawlcove-action), a desktop SEO crawler for Windows and Mac. The action catches regressions before they merge; the desktop app gives you the full site audit — every page, every finding, fixes ranked by impact, history over time, Search Console data alongside. Open the same URL there when a check fails and you want the whole picture.
+This action is the CI half of [Crawl Cove](https://crawlcove.com/?utm_source=github&utm_medium=seo-audit-action), a desktop SEO crawler for Windows and Mac. The action catches regressions before they merge; the desktop app gives you the full site audit — every page, every finding, fixes ranked by impact, history over time, Search Console data alongside. Open the same URL there when a check fails and you want the whole picture.
 
-This repo has its own page on crawlcove.com: [Crawl Cove Action](https://crawlcove.com/open-source/crawlcove-action?utm_source=github&utm_medium=crawlcove-action), with the guide to SEO checks in GitHub Actions at [https://crawlcove.com/blog/seo-github-action](https://crawlcove.com/blog/seo-github-action?utm_source=github&utm_medium=crawlcove-action).
+This repo has its own page on crawlcove.com: [Crawl Cove Action](https://crawlcove.com/open-source/crawlcove-action?utm_source=github&utm_medium=seo-audit-action), with the guide to SEO checks in GitHub Actions at [https://crawlcove.com/blog/seo-github-action](https://crawlcove.com/blog/seo-github-action?utm_source=github&utm_medium=seo-audit-action).
 
 ## Related tools
 
-- [crawlcove-js](https://github.com/CrawlCove/crawlcove-js) — `crawlcove-export`, a typed JavaScript/TypeScript library to load, query and convert Crawl Cove exports.
-- [crawlcove-sheets](https://github.com/CrawlCove/crawlcove-sheets) — Google Sheets add-on that turns a Crawl Cove export into an audit workbook (issues by type, pages by status, title/meta flags).
-- [crawlcove-sf-import](https://github.com/CrawlCove/crawlcove-sf-import) — convert a Screaming Frog export into the Crawl Cove export format, with a report of what carried over.
-- [crawlcove-schema-validator](https://github.com/CrawlCove/crawlcove-schema-validator) — validate a page's JSON-LD against Google's required and recommended rich-result properties.
-- [crawlcove-hreflang-checker](https://github.com/CrawlCove/crawlcove-hreflang-checker) — check a page's or a sitemap's hreflang tags: codes, self-reference, x-default and return tags.
-- [crawlcove-mcp](https://github.com/CrawlCove/crawlcove-mcp) — MCP server that gives Claude, Cursor and other AI assistants the crawl data: crawl a site, list issues, find broken links.
-- [crawlcove-cli](https://github.com/CrawlCove/crawlcove-cli) — the command line crawler this action runs.
-- [crawlcove-export-spec](https://github.com/CrawlCove/crawlcove-export-spec) — the JSON Schema and CSV column reference the report's page shape follows.
-- [crawl-cove-connector](https://github.com/CrawlCove/crawl-cove-connector) — WordPress plugin that applies Crawl Cove's approved fixes to Yoast, Rank Math, SEOPress or AIOSEO.
-- [crawlcove-redirect-chain-checker](https://github.com/CrawlCove/crawlcove-redirect-chain-checker) — follow every hop of a URL’s redirects; flags chains, loops, HTTPS downgrades and meta refreshes.
-- [crawlcove-sitemap-validator](https://github.com/CrawlCove/crawlcove-sitemap-validator) — validate an XML sitemap or sitemap index against the protocol and search-engine limits.
-- [crawlcove-robots-txt-tester](https://github.com/CrawlCove/crawlcove-robots-txt-tester) — lint a robots.txt and test which URLs each crawler may fetch, with the deciding line.
+- [crawlcove-js](https://github.com/CrawlCove/seo-crawl-export-js) — `crawlcove-export`, a typed JavaScript/TypeScript library to load, query and convert Crawl Cove exports.
+- [crawlcove-sheets](https://github.com/CrawlCove/seo-audit-google-sheets) — Google Sheets add-on that turns a Crawl Cove export into an audit workbook (issues by type, pages by status, title/meta flags).
+- [crawlcove-sf-import](https://github.com/CrawlCove/screaming-frog-export-converter) — convert a Screaming Frog export into the Crawl Cove export format, with a report of what carried over.
+- [crawlcove-schema-validator](https://github.com/CrawlCove/schema-markup-validator) — validate a page's JSON-LD against Google's required and recommended rich-result properties.
+- [crawlcove-hreflang-checker](https://github.com/CrawlCove/hreflang-checker) — check a page's or a sitemap's hreflang tags: codes, self-reference, x-default and return tags.
+- [crawlcove-mcp](https://github.com/CrawlCove/seo-mcp-server) — MCP server that gives Claude, Cursor and other AI assistants the crawl data: crawl a site, list issues, find broken links.
+- [crawlcove-cli](https://github.com/CrawlCove/seo-crawler-cli) — the command line crawler this action runs.
+- [crawlcove-export-spec](https://github.com/CrawlCove/seo-crawl-export-spec) — the JSON Schema and CSV column reference the report's page shape follows.
+- [crawl-cove-connector](https://github.com/CrawlCove/wordpress-seo-connector) — WordPress plugin that applies Crawl Cove's approved fixes to Yoast, Rank Math, SEOPress or AIOSEO.
+- [crawlcove-redirect-chain-checker](https://github.com/CrawlCove/redirect-chain-checker) — follow every hop of a URL’s redirects; flags chains, loops, HTTPS downgrades and meta refreshes.
+- [crawlcove-sitemap-validator](https://github.com/CrawlCove/xml-sitemap-validator) — validate an XML sitemap or sitemap index against the protocol and search-engine limits.
+- [crawlcove-robots-txt-tester](https://github.com/CrawlCove/robots-txt-tester) — lint a robots.txt and test which URLs each crawler may fetch, with the deciding line.
 
 ## License
 

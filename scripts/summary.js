@@ -12,8 +12,8 @@
 const fs = require('node:fs')
 
 const MAX_LISTED = 25
-const CRAWLCOVE_URL = 'https://crawlcove.com/?utm_source=github&utm_medium=crawlcove-action'
-const CLI_URL = 'https://github.com/CrawlCove/crawlcove-cli'
+const CRAWLCOVE_URL = 'https://crawlcove.com/?utm_source=github&utm_medium=seo-audit-action'
+const CLI_URL = 'https://github.com/CrawlCove/seo-crawler-cli'
 
 /** Build the Markdown for a report. Pure — exported for tests. */
 function renderSummary({ report, exitCode, url, failOn, threshold, stderr }) {

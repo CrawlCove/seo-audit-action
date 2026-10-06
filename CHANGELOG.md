@@ -4,7 +4,7 @@
 
 Initial release.
 
-- Composite action wrapping [crawlcove-cli](https://github.com/CrawlCove/crawlcove-cli)
+- Composite action wrapping [crawlcove-cli](https://github.com/CrawlCove/seo-crawler-cli)
   v1.1.2: crawls `url` up to `max-pages`, fails the check when the `fail-on`
   checks (broken-links, missing-titles, noindex, redirect-chains) reach
   `threshold`.

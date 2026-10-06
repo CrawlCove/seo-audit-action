@@ -34,7 +34,7 @@ inputs:
     description: 'Token used to post the PR comment. Needs pull-requests: write.'
     default: ${{ github.token }}
   cli-version:
-    description: 'Git ref of CrawlCove/crawlcove-cli to install (tag, branch, or sha).'
+    description: 'Git ref of CrawlCove/seo-crawler-cli to install (tag, branch, or sha).'
     default: 'v1.1.3'
 
 outputs:
@@ -78,7 +78,7 @@ runs:
       run: |
         dir="$RUNNER_TEMP/crawlcove-cli"
         rm -rf "$dir"   # the action may run more than once in a job
-        git clone --quiet --depth 1 --branch "$CLI_VERSION" https://github.com/CrawlCove/crawlcove-cli.git "$dir"
+        git clone --quiet --depth 1 --branch "$CLI_VERSION" https://github.com/CrawlCove/seo-crawler-cli.git "$dir"
         (cd "$dir" && npm ci --omit=dev --ignore-scripts --no-audit --no-fund --silent)
         echo "CRAWLCOVE_CLI=$dir/dist/cli.js" >> "$GITHUB_ENV"
         node "$dir/dist/cli.js" --version
