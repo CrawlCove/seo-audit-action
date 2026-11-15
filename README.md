@@ -1,3 +1,5 @@
+<a href="https://crawlcove.com/download?utm_source=github&utm_medium=readme&utm_campaign=seo-audit-action"><img src="https://raw.githubusercontent.com/CrawlCove/.github/main/banners/seo-audit-action.svg" width="1200" alt="seo-audit-action: Crawl a staging or preview URL on every pull request. Fails the check on broken links, missing titles, noindex and redirect chains, with the details as a PR comment." /></a>
+
 # crawlcove-action
 
 A GitHub Action that runs an SEO crawl of your staging or preview URL on every pull request and fails the check on SEO regressions — broken internal links, missing titles, accidental `noindex`, redirect chains — with the details posted as a PR comment.
