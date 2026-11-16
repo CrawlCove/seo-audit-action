@@ -1,5 +1,5 @@
 name: 'CrawlCove SEO Crawl'
-description: 'Crawl a staging or preview URL on every PR and fail the check on SEO regressions: broken links, missing titles, noindex, redirect chains.'
+description: 'Crawl a preview URL on every PR and fail on SEO regressions: broken links, missing titles, noindex, redirect chains.'
 author: 'Crawl Cove'
 branding:
   icon: 'search'

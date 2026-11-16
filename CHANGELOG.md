@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.2 (2026-11-16)
+
+- Shorter `action.yml` description, to fit the GitHub Marketplace limit of 125
+  characters. No behaviour change.
+
+## 1.0.1 (2026-09-29)
+
+- `cli-version` defaults to crawlcove-cli v1.1.3 (versioned user agent pointing
+  at crawlcove.com).
+
 ## 1.0.0 — 2026-09-29
 
 Initial release.

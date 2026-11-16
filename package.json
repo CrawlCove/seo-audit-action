@@ -1,7 +1,7 @@
 {
   "name": "crawlcove-action",
-  "version": "1.0.0",
-  "description": "GitHub Action: crawl a staging or preview URL and fail the check on SEO regressions — broken links, missing titles, noindex, redirect chains.",
+  "version": "1.0.2",
+  "description": "GitHub Action: crawl a preview URL on every PR and fail on SEO regressions: broken links, missing titles, noindex, redirect chains.",
   "private": true,
   "scripts": {
     "test": "node --test"
