@@ -2,6 +2,8 @@
 
 # crawlcove-action
 
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-CrawlCove%20SEO%20Crawl-2ea44f?logo=github)](https://github.com/marketplace/actions/crawlcove-seo-crawl)
+
 A GitHub Action that runs an SEO crawl of your staging or preview URL on every pull request and fails the check on SEO regressions — broken internal links, missing titles, accidental `noindex`, redirect chains — with the details posted as a PR comment.
 
 ## Usage
