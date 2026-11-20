@@ -13,13 +13,13 @@ inputs:
     description: 'Stop after crawling this many pages.'
     default: '100'
   fail-on:
-    description: 'Comma-separated checks that count towards failure: broken-links, missing-titles, noindex, redirect-chains — or "none" to report without failing.'
+    description: 'Comma-separated checks that count towards failure: broken-links, missing-titles, noindex, redirect-chains, or "none" to report without failing.'
     default: 'broken-links,missing-titles,noindex,redirect-chains'
   threshold:
     description: 'Fail once the selected checks total this many issues.'
     default: '1'
   ignore-robots:
-    description: 'Crawl URLs that robots.txt disallows. Only for sites you own — typical for a staging host behind a blanket Disallow.'
+    description: 'Crawl URLs that robots.txt disallows. Only for sites you own, such as a staging host behind a blanket Disallow.'
     default: 'false'
   concurrency:
     description: 'Simultaneous requests.'
@@ -35,7 +35,7 @@ inputs:
     default: ${{ github.token }}
   cli-version:
     description: 'Git ref of CrawlCove/seo-crawler-cli to install (tag, branch, or sha).'
-    default: 'v1.1.3'
+    default: 'v1.2.0'
 
 outputs:
   exit-code:
@@ -48,13 +48,13 @@ outputs:
     description: 'Pages crawled.'
     value: ${{ steps.summary.outputs.pages }}
   broken-links:
-    description: 'Broken internal links found (links to 4xx/5xx/unreachable pages, plus each broken page itself).'
+    description: 'Broken internal links found, each counted once (a link to a 4xx/5xx/unreachable page, or a failed page nothing links to).'
     value: ${{ steps.summary.outputs.broken-links }}
   missing-titles:
-    description: 'Pages with no <title>.'
+    description: 'Pages that answered 2xx with no <title>.'
     value: ${{ steps.summary.outputs.missing-titles }}
   noindex:
-    description: 'Pages carrying a robots noindex meta tag.'
+    description: 'Pages that answered 2xx with a robots noindex meta tag.'
     value: ${{ steps.summary.outputs.noindex }}
   redirect-chains:
     description: 'URLs that went through 2 or more redirects.'
@@ -147,6 +147,6 @@ runs:
         CRAWL_EXIT_CODE: ${{ steps.crawl.outputs.exit-code }}
       run: |
         if [ "$CRAWL_EXIT_CODE" != "0" ]; then
-          echo "::error::crawlcove exited $CRAWL_EXIT_CODE — see the job summary for details."
+          echo "::error::crawlcove exited $CRAWL_EXIT_CODE; the job summary has the details."
           exit "$CRAWL_EXIT_CODE"
         fi

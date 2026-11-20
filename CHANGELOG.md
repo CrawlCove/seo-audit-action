@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0 (2026-11-20)
+
+- Runs seo-crawler-cli v1.2.0 by default, which counts each dead link once
+  (before, one dead link read as 2) and counts missing titles and noindex only
+  on pages that answered 2xx. The `broken-links`, `missing-titles` and `noindex`
+  outputs can be lower than under 1.0.x for the same site; pin
+  `cli-version: v1.1.3` to keep the old counting.
+- The PR comment's lists match the counts: each dead link appears once with the
+  status it got, and a 404 page's own title or noindex is no longer listed.
+
 ## 1.0.2 (2026-11-16)
 
 - Shorter `action.yml` description, to fit the GitHub Marketplace limit of 125

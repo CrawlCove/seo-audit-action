@@ -57,17 +57,29 @@ function renderSummary({ report, exitCode, url, failOn, threshold, stderr }) {
   lines.push(row('Noindex pages', s.noindex, gating.has('noindex')))
   lines.push(row('Redirect chains (2+ hops)', s.redirectChains, gating.has('redirect-chains')))
 
+  // Lists follow crawlcove-cli 1.2.0's counting, so each list's length matches its row:
+  // a dead link is listed once on the page that links to it (with the status it got),
+  // a failed page only on its own when nothing crawled links to it, and titles and
+  // noindex only for pages that answered 2xx.
+  const failure = new Map(
+    report.pages
+      .filter((p) => p.fetchError !== null || (p.statusCode !== null && p.statusCode >= 400))
+      .map((p) => [p.url, p.fetchError ?? `HTTP ${p.statusCode}`])
+  )
+  const linked = new Set()
   const brokenLinks = []
   for (const p of report.pages) {
-    for (const target of p.brokenInternalLinks) brokenLinks.push(`\`${p.url}\` → \`${target}\``)
+    for (const target of p.brokenInternalLinks) {
+      linked.add(target)
+      brokenLinks.push(`\`${p.url}\` → \`${target}\`` + (failure.has(target) ? ` (${failure.get(target)})` : ''))
+    }
   }
-  const brokenPages = report.pages
-    .filter((p) => p.fetchError !== null || (p.statusCode !== null && p.statusCode >= 400))
-    .map((p) => `\`${p.url}\` — ${p.fetchError ?? `HTTP ${p.statusCode}`}`)
-  const missingTitles = report.pages.filter((p) => !p.title || p.title.trim() === '').map((p) => `\`${p.url}\``)
+  const brokenPages = [...failure].filter(([u]) => !linked.has(u)).map(([u, why]) => `\`${u}\` (${why})`)
+  const ok = (p) => p.statusCode !== null && p.statusCode >= 200 && p.statusCode < 300
+  const missingTitles = report.pages.filter((p) => ok(p) && (!p.title || p.title.trim() === '')).map((p) => `\`${p.url}\``)
   const noindex = report.pages
-    .filter((p) => p.robotsMeta !== null && /noindex/.test(p.robotsMeta))
-    .map((p) => `\`${p.url}\` — \`${p.robotsMeta}\``)
+    .filter((p) => ok(p) && p.robotsMeta !== null && /noindex/.test(p.robotsMeta))
+    .map((p) => `\`${p.url}\`: \`${p.robotsMeta}\``)
   const chains = report.pages
     .filter((p) => p.redirectHops >= 2)
     .map((p) => `\`${p.url}\` → \`${p.finalUrl}\` (${p.redirectHops} hops)`)
@@ -83,7 +95,7 @@ function renderSummary({ report, exitCode, url, failOn, threshold, stderr }) {
   } else if (report.robotsBlocked && report.robotsBlocked.length > 0) {
     lines.push(
       ...details(
-        `Skipped — robots.txt disallows (${report.robotsBlocked.length})`,
+        `Skipped because robots.txt disallows them (${report.robotsBlocked.length})`,
         report.robotsBlocked.map((u) => `\`${u}\``),
         true
       )
@@ -117,7 +129,7 @@ function details(title, items, skipCountInTitle = false) {
 }
 
 function footer() {
-  return `Open the full report — every page, every finding, fixes ranked — in [CrawlCove](${CRAWLCOVE_URL}). Crawled by [crawlcove-cli](${CLI_URL}).`
+  return `See every page, every finding and the fixes ranked in [Crawl Cove](${CRAWLCOVE_URL}). Crawled by [seo-crawler-cli](${CLI_URL}).`
 }
 
 function writeOutputs(report) {

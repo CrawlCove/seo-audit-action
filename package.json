@@ -1,6 +1,6 @@
 {
   "name": "crawlcove-action",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "GitHub Action: crawl a preview URL on every PR and fail on SEO regressions: broken links, missing titles, noindex, redirect chains.",
   "private": true,
   "scripts": {

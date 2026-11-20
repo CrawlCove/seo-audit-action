@@ -48,23 +48,36 @@ test('a clean crawl renders as passed with every count zero and no details block
   assert.match(md, /utm_source=github&utm_medium=seo-audit-action/)
 })
 
-test('a failed crawl lists the broken links, the broken page, and the gated total', () => {
+test('a failed crawl lists each dead link once, with the status it got, and the gated total', () => {
   const r = report(
     [
       page({ brokenInternalLinks: ['https://acme.test/missing'] }),
-      page({ url: 'https://acme.test/missing', finalUrl: 'https://acme.test/missing', statusCode: 404, title: null, titleLength: null, indexable: false })
+      page({ url: 'https://acme.test/missing', finalUrl: 'https://acme.test/missing', statusCode: 404, title: null, titleLength: null, indexable: false, robotsMeta: 'noindex' }),
+      page({ url: 'https://acme.test/notitle', finalUrl: 'https://acme.test/notitle', title: null, titleLength: null })
     ],
-    { summary: { brokenLinks: 2, missingTitles: 1, noindex: 0, redirectChains: 0 } }
+    { summary: { brokenLinks: 1, missingTitles: 1, noindex: 0, redirectChains: 0 } }
   )
   const md = renderSummary({ report: r, exitCode: 1, url: 'https://acme.test/', failOn: 'broken-links', threshold: '1', stderr: '' })
   assert.match(md, /^## CrawlCove SEO crawl: ❌ failed/)
-  assert.match(md, /The gated checks total \*\*2\*\*, threshold 1\./)
-  assert.match(md, /\| Broken links \| 2 \| yes \|/)
+  assert.match(md, /The gated checks total \*\*1\*\*, threshold 1\./)
+  assert.match(md, /\| Broken links \| 1 \| yes \|/)
   assert.match(md, /\| Missing titles \| 1 \| no \|/)
-  assert.match(md, /<details><summary>Broken links \(2\)<\/summary>/)
-  assert.match(md, /- `https:\/\/acme.test\/` → `https:\/\/acme.test\/missing`/)
-  assert.match(md, /- `https:\/\/acme.test\/missing` — HTTP 404/)
+  assert.match(md, /<details><summary>Broken links \(1\)<\/summary>/)
+  assert.match(md, /- `https:\/\/acme.test\/` → `https:\/\/acme.test\/missing` \(HTTP 404\)/)
+  // the 404 page is not listed again on its own, and its title/noindex do not count
+  assert.doesNotMatch(md, /- `https:\/\/acme.test\/missing` \(/)
   assert.match(md, /<details><summary>Missing titles \(1\)<\/summary>/)
+  assert.doesNotMatch(md, /Noindex pages \(/)
+})
+
+test('a failed page that nothing links to is listed on its own', () => {
+  const r = report(
+    [page({}), page({ url: 'https://acme.test/sold-out', finalUrl: 'https://acme.test/sold-out', statusCode: 404 })],
+    { summary: { brokenLinks: 1, missingTitles: 0, noindex: 0, redirectChains: 0 } }
+  )
+  const md = renderSummary({ report: r, exitCode: 1, url: 'https://acme.test/', failOn: ALL, threshold: '1', stderr: '' })
+  assert.match(md, /<details><summary>Broken links \(1\)<\/summary>/)
+  assert.match(md, /- `https:\/\/acme.test\/sold-out` \(HTTP 404\)/)
 })
 
 test('fail-on none gates nothing', () => {
@@ -75,7 +88,7 @@ test('fail-on none gates nothing', () => {
 
 test('robots-blocked URLs are listed and an ignored robots.txt is disclosed', () => {
   const blocked = renderSummary({ report: report([page({})], { robotsBlocked: ['https://acme.test/private'] }), exitCode: 0, url: 'x', failOn: ALL, threshold: '1', stderr: '' })
-  assert.match(blocked, /Skipped — robots.txt disallows \(1\)/)
+  assert.match(blocked, /Skipped because robots.txt disallows them \(1\)/)
   assert.match(blocked, /- `https:\/\/acme.test\/private`/)
   const ignored = renderSummary({ report: report([page({})], { robotsIgnored: true }), exitCode: 0, url: 'x', failOn: ALL, threshold: '1', stderr: '' })
   assert.match(ignored, /robots.txt was ignored for this crawl/)
