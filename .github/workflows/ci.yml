@@ -59,8 +59,8 @@ jobs:
         run: |
           set -x
           test "$RO_EXIT" = "0"
-          test "$RO_PAGES" = "3"          # home, about, missing (404) — private/ is robots-blocked
-          test "$RO_BROKEN" = "2"         # the link to /missing.html + the 404 page itself
+          test "$RO_PAGES" = "3"          # home, about, missing (404); private/ is robots-blocked
+          test "$RO_BROKEN" = "1"         # the one link to /missing.html (CLI 1.2.0 counts a dead link once)
           test "$RO_TITLES" = "0"         # python http.server's 404 page does carry a <title>
           test "$G_EXIT" = "1"
           test "$G_OUTCOME" = "failure"
