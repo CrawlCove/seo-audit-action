@@ -6,7 +6,7 @@
 
 An **SEO audit GitHub Action**: it crawls your staging or preview URL on every pull request and fails the check on SEO regressions (broken internal links, missing titles, an accidental `noindex`, redirect chains), with the details posted as a PR comment.
 
-**See it run:** [seo-test-site's own workflow](https://github.com/CrawlCove/seo-test-site/actions/workflows/seo-audit.yml) audits a public site with 54 planted SEO problems on every push. Open any run for the job summary.
+**See it run:** [seo-test-site's own workflow](https://github.com/CrawlCove/seo-test-site/actions/workflows/seo-audit.yml) audits a public site full of planted SEO problems on every push. Open any run for the job summary.
 
 ## Usage
 
